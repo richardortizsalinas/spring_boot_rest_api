@@ -1,0 +1,24 @@
+server.port = 8089
+#spring.application.name= creditcard-service
+
+
+#info.app.name=creditcard-service
+#management.security.enabled=false
+
+
+# configure eureka client
+eureka.instance.leaseRenewalIntervalInSeconds: 1
+eureka.instance.leaseExpirationDurationInSeconds: 3
+eureka.client.serviceUrl.defaultZone: http://user:password@localhost:9091/eureka/
+#eureka.client.serviceUrl.defaultZone: http://user:password@service-registry-poc-msa-aee.sbmdegos01v.ambientesbc.lab/eureka/
+
+#spring.datasource.url=jdbc:mariadb://localhost:3306/jsadb
+#spring.datasource.username=root
+#spring.datasource.password=admin
+
+#spring.jackson.serialization.write-dates-as-timestamps:false
+#spring.jackson.date-format=
+#spring.jpa.database-platform=org.hibernate.dialect.MySQL5InnoDBDialect
+#spring.jpa.properties.hibernate.current_session_context_class=org.springframework.orm.hibernate5.SpringSessionContext
+#spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
+

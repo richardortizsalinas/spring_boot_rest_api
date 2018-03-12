@@ -1,0 +1,24 @@
+spring:
+    application:
+        name: creditcard-service
+    cloud:
+        vault:
+            token: f30190db-e8fa-41d0-6e62-37090ea91555
+            host: localhost
+            port: 8200
+            scheme: http
+    jpa:
+         database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+         properties: 
+            hibernate: 
+              current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+              
+    datasource: 
+        driver-class-name: org.mariadb.jdbc.Driver
+
+    jackson:
+        serialization: 
+          write-dates-as-timestamps: false
+          
+        
+    
