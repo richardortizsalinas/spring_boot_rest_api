@@ -2,11 +2,11 @@ spring:
     application:
         name: creditcard-service
     cloud:
-        vault:
-            token: f30190db-e8fa-41d0-6e62-37090ea91555
-            host: localhost
-            port: 8200
-            scheme: http
+        vault: 
+             token: ${VAULT_TOKEN}
+             host: ${VAULT_HOST}
+             port: ${VAULT_PORT}
+             scheme: ${VAULT_SCHEME}
     jpa:
          database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
          properties: 
@@ -19,6 +19,12 @@ spring:
     jackson:
         serialization: 
           write-dates-as-timestamps: false
+          
+info:
+    app:
+        name: Creditcard Microservice
+        description: The microservice provide creditcard operations
+
           
         
     
