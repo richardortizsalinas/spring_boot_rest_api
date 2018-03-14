@@ -1,3 +1,4 @@
+CREATE DATABASE `creditcard` /*!40100 COLLATE 'latin1_swedish_ci' */
 
 CREATE TABLE `creditcard` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
