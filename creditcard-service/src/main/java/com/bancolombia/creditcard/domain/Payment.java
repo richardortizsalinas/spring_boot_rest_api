@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  */
 @Entity
-@Table(name="movement")
+@Table(name="payment")
 @ApiModel
 public class Payment implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -35,8 +35,11 @@ public class Payment implements Serializable {
 	@ApiModelProperty(name = "date",required=true,value = "The payment date",example="2018-03-07T22:00:00.000+0000")
 	private Date date;
 	
-	@ApiModelProperty(name = "type",required=true,value = "The payment amount",example="10000")
+	@ApiModelProperty(name = "amount",required=true,value = "The payment amount",example="10000")
 	private BigDecimal amount;
+	
+	@ApiModelProperty(name = "account_id",required=true,value = "The account for the payment",example="1112222333")
+	private String accountId;
 
 	@ApiModelProperty(name = "creditcard",required=true,value = "The creditcard number")
 	private Creditcard creditcard;
@@ -82,4 +85,13 @@ public class Payment implements Serializable {
 		this.creditcard = parent;
 	}
 
+	public String getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
+	}
+
+	
 }

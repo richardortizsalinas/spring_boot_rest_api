@@ -1,5 +1,6 @@
 package com.bancolombia.creditcard.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.bancolombia.creditcard.domain.Creditcard;
-import com.bancolombia.creditcard.domain.Movement;
 import com.bancolombia.creditcard.domain.Payment;
 import com.bancolombia.creditcard.repository.CreditcardRepository;
-import com.bancolombia.creditcard.repository.MovementRepository;
 import com.bancolombia.creditcard.repository.PaymentRepository;
 
 @Service
@@ -21,9 +20,6 @@ public class CreditcardService{
 	
 	@Autowired
 	CreditcardRepository creditcardRepository;
-
-	@Autowired
-	MovementRepository movementRepository;
 	
 	@Autowired
 	PaymentRepository paymentRepository;
@@ -49,20 +45,42 @@ public class CreditcardService{
 
 		return responseEntity;
 	}
+	
+	
+	public ResponseEntity<List<Creditcard>> getByUserId(String owner_id) {
+		
+		String[] data=owner_id.split("_");
+		
+		String type=data[0];
+		String number=data[1];
+		
+		List<Creditcard> list = creditcardRepository.getByOwner(type, number);
 
-	public ResponseEntity<List<Movement>> getMovements(String number) {
+		ResponseEntity<List<Creditcard>> responseEntity;
+
+		if (list == null || list.isEmpty()) {
+			responseEntity = new ResponseEntity<List<Creditcard>>(list, HttpStatus.NOT_FOUND);
+
+		} else {
+			responseEntity = new ResponseEntity<List<Creditcard>>(list, HttpStatus.OK);
+		}
+
+		return responseEntity;
+	}
+
+	public ResponseEntity<List<Payment>> getMovements(String number) {
 
 		Creditcard data = creditcardRepository.findByNumber(number);
 
-		List<Movement> movementList = movementRepository.findByCreditcard(data);
+		List<Payment> movementList = paymentRepository.findByCreditcard(data);
 
-		ResponseEntity<List<Movement>> responseEntity;
+		ResponseEntity<List<Payment>> responseEntity;
 
 		if (data == null) {
-			responseEntity = new ResponseEntity<List<Movement>>(movementList, HttpStatus.NOT_FOUND);
+			responseEntity = new ResponseEntity<List<Payment>>(movementList, HttpStatus.NOT_FOUND);
 
 		} else {
-			responseEntity = new ResponseEntity<List<Movement>>(movementList, HttpStatus.OK);
+			responseEntity = new ResponseEntity<List<Payment>>(movementList, HttpStatus.OK);
 		}
 
 		return responseEntity;
@@ -75,8 +93,8 @@ public class CreditcardService{
 			newCard.setExpiration_date(creditcard.getExpiration_date());
 			newCard.setCredit_limit(creditcard.getCredit_limit());
 			newCard.setNumber(creditcard.getNumber());
-			newCard.setOwner_id(creditcard.getOwner_id());
-			newCard.setOwner_id_type(creditcard.getOwner_id_type());
+			newCard.setOwnerId(creditcard.getOwnerId());
+			newCard.setOwnerIdType(creditcard.getOwnerIdType());
 			creditcardRepository.save(newCard);
 			return new ResponseEntity<String>("Creditcard saved successfully", HttpStatus.OK);
 
@@ -93,8 +111,8 @@ public class CreditcardService{
 		data.setExpiration_date(creditcard.getExpiration_date());
 		data.setCredit_limit(creditcard.getCredit_limit());
 		data.setNumber(creditcard.getNumber());
-		data.setOwner_id(creditcard.getOwner_id());
-		data.setOwner_id_type(creditcard.getOwner_id_type());
+		data.setOwnerId(creditcard.getOwnerId());
+		data.setOwnerIdType(creditcard.getOwnerIdType());
 		creditcardRepository.save(data);
 
 		ResponseEntity<String> responseEntity = new ResponseEntity<String>("Creditcard updated successfully",
@@ -114,17 +132,18 @@ public class CreditcardService{
 		try {
 
 			Creditcard data = creditcardRepository.findByNumber(payment.getCreditcard().getNumber());
-			
+			System.out.println(payment.getAccountId());
 			Payment newPayment = new Payment();
 			newPayment.setAmount(payment.getAmount());
 			newPayment.setCreditcard(data);
-			newPayment.setDate(payment.getDate());
+			newPayment.setDate(new Date());
+			newPayment.setAccountId(payment.getAccountId());
 			paymentRepository.save(newPayment);
 			return new ResponseEntity<String>("Payment saved successfully", HttpStatus.OK);
 
 		} catch (Exception e) {
 			System.out.println(e);
-			return null;
+			return new ResponseEntity<String>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	

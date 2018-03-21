@@ -16,7 +16,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.bancolombia.creditcard.domain.Creditcard;
-import com.bancolombia.creditcard.domain.Movement;
 import com.bancolombia.creditcard.domain.Payment;
 import com.bancolombia.creditcard.service.CreditcardService;
 
@@ -69,7 +68,7 @@ public class CreditcardController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved movements"),
 			@ApiResponse(code = 404, message = "No movements avalilable") })
 	@RequestMapping(value = "/{number}/movements", method = RequestMethod.GET, produces = "application/vnd.api+json")
-	public ResponseEntity<List<Movement>> showCreditcardMovements(@PathVariable String number) {
+	public ResponseEntity<List<Payment>> showCreditcardMovements(@PathVariable String number) {
 
 		return creditcardService.getMovements(number);
 	}
@@ -99,6 +98,17 @@ public class CreditcardController {
 	public ResponseEntity<String> delete(@PathVariable String number) {
 		return creditcardService.delete(number);
 
+	}
+	
+	
+	@ApiOperation(value = "Search a Creditcard by user id", response = Creditcard.class)
+	@ApiParam(name = "owner_id", value = "owner id CC_111111", required = true)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved creditcard"),
+			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
+	@RequestMapping(value = "/owner/{owner_id}", method = RequestMethod.GET, produces = "application/vnd.api+json")
+	public ResponseEntity<List<Creditcard>> getCreditcardByUserid(@PathVariable String owner_id) {
+		
+		return creditcardService.getByUserId(owner_id);
 	}
 	
 	@ApiOperation(value = "Pay Creditcard")

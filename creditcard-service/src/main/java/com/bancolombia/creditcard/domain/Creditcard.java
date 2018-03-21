@@ -42,10 +42,10 @@ public class Creditcard implements Serializable {
 	private BigDecimal credit_limit;
 	
 	@ApiModelProperty(name = "owner_id",required=true,value = "The creditcard owner_id",example="0012003003")
-	private String owner_id;
+	private String ownerId;
 	
 	@ApiModelProperty(name = "owner_id_type",required=true,value = "The creditcard owner_id_type",example="0012003003")
-	private String owner_id_type;
+	private String ownerIdType;
 	
 	@Id
 	@Column(unique=true, nullable=false)
@@ -83,20 +83,22 @@ public class Creditcard implements Serializable {
 		this.credit_limit = credit_limit;
 	}
 
-	public String getOwner_id() {
-		return owner_id;
+	public String getOwnerId() {
+		return ownerId;
 	}
 
-	public void setOwner_id(String owner_id) {
-		this.owner_id = owner_id;
+	public void setOwnerId(String ownerId) {
+		this.ownerId = ownerId;
 	}
 
-	public String getOwner_id_type() {
-		return owner_id_type;
+	public String getOwnerIdType() {
+		return ownerIdType;
 	}
 
-	public void setOwner_id_type(String owner_id_type) {
-		this.owner_id_type = owner_id_type;
+	public void setOwnerIdType(String ownerIdType) {
+		this.ownerIdType = ownerIdType;
 	}
+
+
 	
 }
