@@ -20,12 +20,12 @@
 	</properties>
 
 	<dependencies>
-	
-	<dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-        </dependency>
-        
+
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -87,6 +87,11 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-vault-starter-config</artifactId>
 			<version>1.0.0.BUILD-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
 		</dependency>
 
 	</dependencies>

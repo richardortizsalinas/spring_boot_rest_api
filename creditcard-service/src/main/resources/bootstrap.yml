@@ -25,11 +25,3 @@ info:
         name: Creditcard Microservice
         description: The microservice provide creditcard operations
         
-kafka:
-  bootstrap-servers: localhost:9092
-  topic:
-    helloworld: test
-
-          
-        
-    
