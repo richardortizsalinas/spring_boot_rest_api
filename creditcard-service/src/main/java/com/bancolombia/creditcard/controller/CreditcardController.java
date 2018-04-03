@@ -19,6 +19,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import com.bancolombia.creditcard.domain.Creditcard;
 import com.bancolombia.creditcard.domain.Payment;
+import com.bancolombia.creditcard.kafka.MessageStorage;
+import com.bancolombia.creditcard.kafka.Receiver;
 import com.bancolombia.creditcard.kafka.Sender;
 import com.bancolombia.creditcard.service.CreditcardService;
 
@@ -50,10 +52,22 @@ public class CreditcardController {
 	@Autowired
 	private Sender sender;
 
+	@Autowired
+	MessageStorage storage;
+	@Autowired
+	private Receiver receiver;
+
 	@GetMapping(value = "/producer")
 	public String producer(@RequestParam("data") String data) {
 		sender.send(data);
 		return "Done";
+	}
+
+	@GetMapping(value = "/consumer")
+	public String getAllRecievedMessage() {
+		String messages = storage.toString();
+		storage.clear();
+		return messages;
 	}
 
 	@ApiOperation(value = "View a list of available creditcards", response = Iterable.class)
