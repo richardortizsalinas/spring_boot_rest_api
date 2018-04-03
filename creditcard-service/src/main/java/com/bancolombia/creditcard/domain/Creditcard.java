@@ -12,43 +12,49 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.github.jasminb.jsonapi.annotations.Type;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.SerializedName;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
 
 /**
  * The persistent class for the creditcard database table.
  * 
  */
 @Entity
-@Table(name="creditcard")
+@Table(name = "creditcard")
 @ApiModel
 @Type("creditcard")
 public class Creditcard implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
-	 @ApiModelProperty(name = "id",required=false,value = "The database generated creditcard ID")
-	 @com.github.jasminb.jsonapi.annotations.Id
+
+	@ApiModelProperty(name = "id", required = false, value = "The database generated creditcard ID")
+	@com.github.jasminb.jsonapi.annotations.Id
 	private Integer id;
-	
-	@ApiModelProperty(name = "number",required=true,value = "The creditcard number",example="0012003003")
+
+	@ApiModelProperty(name = "number", required = true, value = "The creditcard number", example = "0012003003")
 	private String number;
-	
-	@ApiModelProperty(name = "expiration_date",required=true,value = "The creditcard expiration_date",example="2018-03-07T22:00:00.000+0000")
+
+	@ApiModelProperty(name = "expiration_date", required = true, value = "The creditcard expiration_date", example = "2018-03-07T22:00:00.000+0000")
+	@SerializedName("expiration_date")
 	private Date expiration_date;
-	
-	@ApiModelProperty(name = "credit_limit",required=true,value = "The creditcard limit",example="0012003003")
+
+	@ApiModelProperty(name = "credit_limit", required = true, value = "The creditcard limit", example = "0012003003")
+	@SerializedName("credit_limit")
 	private BigDecimal credit_limit;
-	
-	@ApiModelProperty(name = "owner_id",required=true,value = "The creditcard owner_id",example="0012003003")
+
+	@ApiModelProperty(name = "owner_id", required = true, value = "The creditcard owner_id", example = "0012003003")
+	@SerializedName("owner_id")
 	private String ownerId;
-	
-	@ApiModelProperty(name = "owner_id_type",required=true,value = "The creditcard owner_id_type",example="0012003003")
+
+	@ApiModelProperty(name = "owner_id_type", required = true, value = "The creditcard owner_id_type", example = "0012003003")
+	@SerializedName("owner_id_type")
 	private String ownerIdType;
-	
+
 	@Id
-	@Column(unique=true, nullable=false)
+	@Column(unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer getId() {
 		return this.id;
@@ -74,7 +80,6 @@ public class Creditcard implements Serializable {
 		this.expiration_date = expiration_date;
 	}
 
-
 	public BigDecimal getCredit_limit() {
 		return credit_limit;
 	}
@@ -99,6 +104,15 @@ public class Creditcard implements Serializable {
 		this.ownerIdType = ownerIdType;
 	}
 
+	public static void main(String[] args) {
 
-	
+		Gson g = new GsonBuilder().create();
+		Creditcard data= new Creditcard();
+		
+		data.setOwnerIdType("awdasdas");
+		
+		String jsonString = g.toJson(data);
+		System.out.println(jsonString);
+	}
+
 }

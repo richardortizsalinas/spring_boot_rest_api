@@ -12,24 +12,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.bancolombia.creditcard.domain.Creditcard;
 import com.bancolombia.creditcard.domain.Payment;
+import com.bancolombia.creditcard.kafka.JsonUtil;
+import com.bancolombia.creditcard.kafka.PersistenceMessage;
+import com.bancolombia.creditcard.kafka.PersistenceOperations;
+import com.bancolombia.creditcard.kafka.PersistenceTypes;
+import com.bancolombia.creditcard.kafka.Sender;
 import com.bancolombia.creditcard.repository.CreditcardRepository;
 import com.bancolombia.creditcard.repository.PaymentRepository;
 
 @Service
-public class CreditcardService{
-	
+public class CreditcardService {
+
 	@Autowired
 	CreditcardRepository creditcardRepository;
-	
+
 	@Autowired
 	PaymentRepository paymentRepository;
 
-	
+	@Autowired
+	private Sender sender;
+
 	public List<Creditcard> getAll() {
 		List<Creditcard> productList = creditcardRepository.findAll();
 		return productList;
 	}
-	
+
 	public ResponseEntity<Creditcard> get(String number) {
 
 		Creditcard data = creditcardRepository.findByNumber(number);
@@ -45,15 +52,14 @@ public class CreditcardService{
 
 		return responseEntity;
 	}
-	
-	
+
 	public ResponseEntity<List<Creditcard>> getByUserId(String owner_id) {
-		
-		String[] data=owner_id.split("_");
-		
-		String type=data[0];
-		String number=data[1];
-		
+
+		String[] data = owner_id.split("_");
+
+		String type = data[0];
+		String number = data[1];
+
 		List<Creditcard> list = creditcardRepository.getByOwner(type, number);
 
 		ResponseEntity<List<Creditcard>> responseEntity;
@@ -95,7 +101,19 @@ public class CreditcardService{
 			newCard.setNumber(creditcard.getNumber());
 			newCard.setOwnerId(creditcard.getOwnerId());
 			newCard.setOwnerIdType(creditcard.getOwnerIdType());
-			creditcardRepository.save(newCard);
+
+			PersistenceMessage mensaje = new PersistenceMessage();
+
+			mensaje.setOperation(PersistenceOperations.CREATE.value());
+			mensaje.setType(PersistenceTypes.CREDITCARD.value());
+			mensaje.setData(newCard);
+
+			String message = JsonUtil.getInstance().toJson(mensaje);
+
+			sender.send(message);
+
+			// creditcardRepository.save(newCard);
+			
 			return new ResponseEntity<String>("Creditcard saved successfully", HttpStatus.OK);
 
 		} catch (Exception e) {
@@ -127,7 +145,7 @@ public class CreditcardService{
 		return new ResponseEntity<String>("Creditcard deleted successfully", HttpStatus.OK);
 
 	}
-	
+
 	public ResponseEntity<String> pay(@RequestBody Payment payment) {
 		try {
 
@@ -146,5 +164,5 @@ public class CreditcardService{
 			return new ResponseEntity<String>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 }
