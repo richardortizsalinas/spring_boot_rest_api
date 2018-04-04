@@ -1,7 +1,7 @@
 package com.bancolombia.creditcard.kafka;
 
 public enum PersistenceTypes {
-	CREDITCARD("Creditcard"), PAYMENT("Payment");
+	CREDITCARD("creditcard"), PAYMENT("payment");
 
 	private String value;
 
