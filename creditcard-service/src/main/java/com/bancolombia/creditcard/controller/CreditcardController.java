@@ -27,6 +27,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import rx.Observable;
+import rx.Single;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -142,5 +144,11 @@ public class CreditcardController {
 	public ResponseEntity<String> payCreditcard(@RequestBody Payment payment) {
 		return creditcardService.pay(payment);
 	}
+	
+	@RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/vnd.api+json")
+	 public Single<ResponseEntity<String>> save(@RequestBody(required = true) Creditcard creditcard) {
+		 return Single.just(creditcardService.save(creditcard));
+	}
+
 
 }
