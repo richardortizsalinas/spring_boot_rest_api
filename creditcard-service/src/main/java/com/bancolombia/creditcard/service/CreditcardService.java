@@ -113,7 +113,7 @@ public class CreditcardService {
 			sender.send(message);
 
 			// creditcardRepository.save(newCard);
-			
+
 			return new ResponseEntity<String>("Creditcard saved successfully", HttpStatus.OK);
 
 		} catch (Exception e) {
@@ -131,7 +131,18 @@ public class CreditcardService {
 		data.setNumber(creditcard.getNumber());
 		data.setOwnerId(creditcard.getOwnerId());
 		data.setOwnerIdType(creditcard.getOwnerIdType());
-		creditcardRepository.save(data);
+
+		PersistenceMessage mensaje = new PersistenceMessage();
+
+		mensaje.setOperation(PersistenceOperations.UPDATE.value());
+		mensaje.setType(PersistenceTypes.CREDITCARD.value());
+		mensaje.setData(data);
+
+		String message = JsonUtil.getInstance().toJson(mensaje);
+
+		sender.send(message);
+
+		// creditcardRepository.save(data);
 
 		ResponseEntity<String> responseEntity = new ResponseEntity<String>("Creditcard updated successfully",
 				HttpStatus.OK);
@@ -140,8 +151,21 @@ public class CreditcardService {
 	}
 
 	public ResponseEntity<String> delete(@PathVariable String number) {
+
 		Creditcard data = creditcardRepository.findByNumber(number);
-		creditcardRepository.delete(data);
+
+		PersistenceMessage mensaje = new PersistenceMessage();
+
+		mensaje.setOperation(PersistenceOperations.DELETE.value());
+		mensaje.setType(PersistenceTypes.CREDITCARD.value());
+		mensaje.setData(data);
+
+		String message = JsonUtil.getInstance().toJson(mensaje);
+
+		sender.send(message);
+
+		// creditcardRepository.delete(data);
+
 		return new ResponseEntity<String>("Creditcard deleted successfully", HttpStatus.OK);
 
 	}
@@ -156,7 +180,19 @@ public class CreditcardService {
 			newPayment.setCreditcard(data);
 			newPayment.setDate(new Date());
 			newPayment.setAccountId(payment.getAccountId());
-			paymentRepository.save(newPayment);
+
+			PersistenceMessage mensaje = new PersistenceMessage();
+
+			mensaje.setOperation(PersistenceOperations.CREATE.value());
+			mensaje.setType(PersistenceTypes.PAYMENT.value());
+			mensaje.setData(newPayment);
+
+			String message = JsonUtil.getInstance().toJson(mensaje);
+
+			sender.send(message);
+
+			// paymentRepository.save(newPayment);
+
 			return new ResponseEntity<String>("Payment saved successfully", HttpStatus.OK);
 
 		} catch (Exception e) {
