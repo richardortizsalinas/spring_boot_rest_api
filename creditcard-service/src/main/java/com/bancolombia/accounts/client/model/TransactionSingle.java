@@ -33,7 +33,7 @@ public class TransactionSingle {
    */
   @JsonAdapter(TypeEnum.Adapter.class)
   public enum TypeEnum {
-    TRANSACTIONS("Transactions");
+	  Transactions("Transactions");
 
     private String value;
 
@@ -47,7 +47,7 @@ public class TransactionSingle {
 
     @Override
     public String toString() {
-      return String.valueOf(value);
+      return getValue();
     }
 
     public static TypeEnum fromValue(String text) {
