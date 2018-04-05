@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.google.gson.annotations.SerializedName;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -39,6 +40,7 @@ public class Payment implements Serializable {
 	private BigDecimal amount;
 	
 	@ApiModelProperty(name = "account_id",required=true,value = "The account for the payment",example="1112222333")
+	@SerializedName("account_id")
 	private String accountId;
 
 	@ApiModelProperty(name = "creditcard",required=true,value = "The creditcard number")
