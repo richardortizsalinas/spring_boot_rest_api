@@ -9,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import com.bancolombia.accounts.client.model.TransactionResponseSingle;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class TransactionApi {
 
@@ -23,37 +21,30 @@ public class TransactionApi {
 		this.url = url;
 	}
 
-	public TransactionResponseSingle create(TransactionResponseSingle requestBody) throws JsonProcessingException {
-		
-		String json = new ObjectMapper().writeValueAsString(requestBody);
+	public TransactionResponseSingle create(TransactionResponseSingle requestBody) throws Exception {
 
-		 //  and simple print it
+		try {
+			// String json = new ObjectMapper().writeValueAsString(requestBody);
 
-		    System.out.println(json);
-		    
-		    HttpHeaders headers = new HttpHeaders();
-		    headers.setContentType(MediaType.APPLICATION_JSON);
-//		    ContentType(MediaType.valueOf("application/vnd.api+json"));
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.valueOf("application/vnd.api+json"));
 
-		    HttpEntity<TransactionResponseSingle> entity = new HttpEntity<TransactionResponseSingle>(requestBody ,headers);
-		    
-		    
-//		    HttpHeaders headers = new HttpHeaders();
-//		     headers.add("Accept", MediaType.APPLICATION_JSON);
-		    
-		ResponseEntity<TransactionResponseSingle> result = restTemplate.postForEntity(url + PATH_TRANSACTION,
-				entity, TransactionResponseSingle.class);
-		
-		
+			HttpEntity<TransactionResponseSingle> entity = new HttpEntity<TransactionResponseSingle>(requestBody,
+					headers);
 
-		// Code = 200.
-		if (result.getStatusCode() == HttpStatus.OK) {
-			TransactionResponseSingle transaction = result.getBody();
-			return transaction;
-		}
-		else {
+			ResponseEntity<TransactionResponseSingle> result = restTemplate.postForEntity(url + PATH_TRANSACTION,
+					entity, TransactionResponseSingle.class);
+
+			if (result.getStatusCode() == HttpStatus.OK) {
+				TransactionResponseSingle transaction = result.getBody();
+				return transaction;
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
 			return null;
 		}
+
 	}
 
 }
