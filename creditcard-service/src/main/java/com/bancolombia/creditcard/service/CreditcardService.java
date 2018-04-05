@@ -1,5 +1,6 @@
 package com.bancolombia.creditcard.service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.bancolombia.accounts.client.TransactionApi;
+import com.bancolombia.accounts.client.model.Transaction;
+import com.bancolombia.accounts.client.model.TransactionResponseSingle;
+import com.bancolombia.accounts.client.model.TransactionSingle;
 import com.bancolombia.creditcard.domain.Creditcard;
 import com.bancolombia.creditcard.domain.Payment;
 import com.bancolombia.creditcard.kafka.JsonUtil;
@@ -17,11 +22,14 @@ import com.bancolombia.creditcard.kafka.PersistenceMessage;
 import com.bancolombia.creditcard.kafka.PersistenceOperations;
 import com.bancolombia.creditcard.kafka.PersistenceTypes;
 import com.bancolombia.creditcard.kafka.Sender;
+import com.bancolombia.creditcard.properties.Configuration;
 import com.bancolombia.creditcard.repository.CreditcardRepository;
 import com.bancolombia.creditcard.repository.PaymentRepository;
 
 @Service
 public class CreditcardService {
+
+	private static final String CUENTA_BANCO = "0000000000";
 
 	@Autowired
 	CreditcardRepository creditcardRepository;
@@ -112,8 +120,6 @@ public class CreditcardService {
 
 			sender.send(message);
 
-			// creditcardRepository.save(newCard);
-
 			return new ResponseEntity<String>("Creditcard saved successfully", HttpStatus.OK);
 
 		} catch (Exception e) {
@@ -142,8 +148,6 @@ public class CreditcardService {
 
 		sender.send(message);
 
-		// creditcardRepository.save(data);
-
 		ResponseEntity<String> responseEntity = new ResponseEntity<String>("Creditcard updated successfully",
 				HttpStatus.OK);
 
@@ -164,8 +168,6 @@ public class CreditcardService {
 
 		sender.send(message);
 
-		// creditcardRepository.delete(data);
-
 		return new ResponseEntity<String>("Creditcard deleted successfully", HttpStatus.OK);
 
 	}
@@ -174,31 +176,65 @@ public class CreditcardService {
 		try {
 
 			Creditcard data = creditcardRepository.findByNumber(payment.getCreditcard().getNumber());
-			System.out.println(payment.getAccountId());
-			Payment newPayment = new Payment();
-			newPayment.setAmount(payment.getAmount());
-			newPayment.setCreditcard(data);
-			newPayment.setDate(new Date());
-			newPayment.setAccountId(payment.getAccountId());
 
-			PersistenceMessage mensaje = new PersistenceMessage();
+			// debito a cuenta
 
-			mensaje.setOperation(PersistenceOperations.CREATE.value());
-			mensaje.setType(PersistenceTypes.PAYMENT.value());
-			mensaje.setData(newPayment);
+			TransactionApi cliente = new TransactionApi(Configuration.getDepositsServiceEndpoint());
+			TransactionResponseSingle requestBody = new TransactionResponseSingle();
 
-			String message = JsonUtil.getInstance().toJson(mensaje);
+			TransactionSingle request = new TransactionSingle();
+			request.setId("");
+			request.setType(TransactionSingle.TypeEnum.Transactions);
 
-			sender.send(message);
+			Transaction attributes = new Transaction();
+			attributes.setId("");
+			attributes.setAmount(payment.getAmount());
+			attributes.setOrigin(payment.getAccountId());
+			attributes.setDestination(CUENTA_BANCO);
+			request.setAttributes(attributes);
+			requestBody.setData(request);
 
-			// paymentRepository.save(newPayment);
+			TransactionResponseSingle response = cliente.create(requestBody);
 
-			return new ResponseEntity<String>("Payment saved successfully", HttpStatus.OK);
+			if (response != null) {
+
+				// modificacion del cupo disponible
+				BigDecimal cupo = data.getCredit_limit().add(payment.getAmount());
+				data.setCredit_limit(cupo);
+				updateCreditcard(payment.getCreditcard().getNumber(), data);
+
+				// registro del pago
+				Payment newPayment = new Payment();
+				newPayment.setAmount(payment.getAmount());
+				newPayment.setCreditcard(data);
+				newPayment.setDate(new Date());
+				newPayment.setAccountId(payment.getAccountId());
+
+				send(PersistenceOperations.CREATE.value(), PersistenceTypes.PAYMENT.value(), newPayment);
+
+				return new ResponseEntity<String>("Payment saved successfully", HttpStatus.OK);
+
+			} else {
+
+				return new ResponseEntity<String>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
 
 		} catch (Exception e) {
 			System.out.println(e);
 			return new ResponseEntity<String>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	public void send(String operation, String type, Object data) {
+		PersistenceMessage mensajePayment = new PersistenceMessage();
+
+		mensajePayment.setOperation(operation);
+		mensajePayment.setType(type);
+		mensajePayment.setData(data);
+
+		String message = JsonUtil.getInstance().toJson(mensajePayment);
+
+		sender.send(message);
 	}
 
 }
