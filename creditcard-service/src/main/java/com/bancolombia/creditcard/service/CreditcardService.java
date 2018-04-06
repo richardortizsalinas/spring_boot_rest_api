@@ -4,7 +4,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,7 +25,6 @@ import com.bancolombia.creditcard.kafka.PersistenceMessage;
 import com.bancolombia.creditcard.kafka.PersistenceOperations;
 import com.bancolombia.creditcard.kafka.PersistenceTypes;
 import com.bancolombia.creditcard.kafka.Sender;
-import com.bancolombia.creditcard.properties.Configuration;
 import com.bancolombia.creditcard.repository.CreditcardRepository;
 import com.bancolombia.creditcard.repository.PaymentRepository;
 
@@ -30,6 +32,11 @@ import com.bancolombia.creditcard.repository.PaymentRepository;
 public class CreditcardService {
 
 	private static final String CUENTA_BANCO = "0000000000";
+	
+	private static final Logger LOG = LoggerFactory.getLogger(CreditcardService.class);
+
+	@Value("${service.deposits.endpoint}")
+	String depositsServiceEndpoint;
 
 	@Autowired
 	CreditcardRepository creditcardRepository;
@@ -174,12 +181,12 @@ public class CreditcardService {
 
 	public ResponseEntity<String> pay(@RequestBody Payment payment) {
 		try {
-
+			
 			Creditcard data = creditcardRepository.findByNumber(payment.getCreditcard().getNumber());
 
 			// debito a cuenta
 
-			TransactionApi cliente = new TransactionApi(Configuration.getDepositsServiceEndpoint());
+			TransactionApi cliente = new TransactionApi(depositsServiceEndpoint);
 			TransactionResponseSingle requestBody = new TransactionResponseSingle();
 
 			TransactionSingle request = new TransactionSingle();
@@ -193,11 +200,11 @@ public class CreditcardService {
 			attributes.setDestination(CUENTA_BANCO);
 			request.setAttributes(attributes);
 			requestBody.setData(request);
-
+			
 			TransactionResponseSingle response = cliente.create(requestBody);
-
+			
 			if (response != null) {
-
+				
 				// modificacion del cupo disponible
 				BigDecimal cupo = data.getCredit_limit().add(payment.getAmount());
 				data.setCredit_limit(cupo);
@@ -220,7 +227,7 @@ public class CreditcardService {
 			}
 
 		} catch (Exception e) {
-			System.out.println(e);
+			LOG.error("ERROR",e);
 			return new ResponseEntity<String>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

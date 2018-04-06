@@ -10,7 +10,7 @@ public class JsonUtil {
 	private static Gson g;
 
 	protected JsonUtil() {
-		g = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+		g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 	}
 
 	public static JsonUtil getInstance() {
