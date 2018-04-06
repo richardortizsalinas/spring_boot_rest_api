@@ -1,0 +1,19 @@
+spring:
+    application:
+        name: api-gateway
+    cloud:
+        vault: 
+             token: ${VAULT_TOKEN}
+             host: ${VAULT_HOST}
+             port: ${VAULT_PORT}
+             scheme: ${VAULT_SCHEME}
+
+    jackson:
+        serialization: 
+          write-dates-as-timestamps: false
+          
+info:
+    app:
+        name: ApiGateway Microservice
+        description: The microservice provide composition capabilities
+        
