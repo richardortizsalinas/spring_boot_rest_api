@@ -22,16 +22,19 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * AccountSingle
  */
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2018-04-06T14:54:29.083Z")
 public class AccountSingle {
   /**
    * Gets or Sets type
    */
   @JsonAdapter(TypeEnum.Adapter.class)
   public enum TypeEnum {
-    ACCOUNTS("Accounts");
+	  Accounts("Accounts");
 
     private String value;
 
@@ -92,6 +95,7 @@ public class AccountSingle {
    * Get type
    * @return type
   **/
+  @ApiModelProperty(required = true, value = "")
   public TypeEnum getType() {
     return type;
   }
@@ -109,6 +113,7 @@ public class AccountSingle {
    * Get id
    * @return id
   **/
+  @ApiModelProperty(example = "CC12345", value = "")
   public String getId() {
     return id;
   }
@@ -126,6 +131,7 @@ public class AccountSingle {
    * Get attributes
    * @return attributes
   **/
+  @ApiModelProperty(required = true, value = "")
   public Account getAttributes() {
     return attributes;
   }
@@ -143,6 +149,7 @@ public class AccountSingle {
    * Get links
    * @return links
   **/
+  @ApiModelProperty(required = true, value = "")
   public AccountSingleLinks getLinks() {
     return links;
   }

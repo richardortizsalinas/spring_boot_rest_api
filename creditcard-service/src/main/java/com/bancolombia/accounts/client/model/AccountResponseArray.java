@@ -17,9 +17,12 @@ import java.util.Objects;
 
 import com.google.gson.annotations.SerializedName;
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * AccountResponseArray
  */
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2018-04-06T14:54:29.083Z")
 public class AccountResponseArray {
   @SerializedName("data")
   private AccountArray data = null;
@@ -33,6 +36,7 @@ public class AccountResponseArray {
    * Get data
    * @return data
   **/
+  @ApiModelProperty(required = true, value = "")
   public AccountArray getData() {
     return data;
   }
