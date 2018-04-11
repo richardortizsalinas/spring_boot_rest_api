@@ -49,7 +49,6 @@ public class ApiGatewayController {
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 	@RequestMapping(value = "/{owner_id}", method = RequestMethod.GET, produces = "application/vnd.api+json")
 	public ResponseEntity<List<Producto>> getProductsByUserid(@PathVariable String owner_id) {
-System.out.println("LLEGOOOOOOOOOOOOOoo");
 		return productsService.getProductsByUserId(owner_id);
 	}
 
