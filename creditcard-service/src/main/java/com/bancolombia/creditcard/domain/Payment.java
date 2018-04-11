@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.google.gson.annotations.SerializedName;
@@ -44,6 +45,7 @@ public class Payment implements Serializable {
 	private String accountId;
 
 	@ApiModelProperty(name = "creditcard",required=true,value = "The creditcard number")
+	@NotNull
 	private Creditcard creditcard;
 
 	public Payment() {

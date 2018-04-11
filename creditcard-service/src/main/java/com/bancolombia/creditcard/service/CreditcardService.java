@@ -179,11 +179,10 @@ public class CreditcardService {
 
 	}
 
-	public ResponseEntity<String> pay(@RequestBody Payment payment) {
+	public ResponseEntity<String> pay(Payment payment) {
 		try {
 			
 			Creditcard data = creditcardRepository.findByNumber(payment.getCreditcard().getNumber());
-
 			// debito a cuenta
 
 			TransactionApi cliente = new TransactionApi(depositsServiceEndpoint);

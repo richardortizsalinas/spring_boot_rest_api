@@ -2,6 +2,8 @@ package com.bancolombia.creditcard.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
@@ -140,7 +142,7 @@ public class CreditcardController {
 	@ApiParam(name = "Payment", value = "creditcard data", required = true)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully created payment") })
 	@RequestMapping(value = "/pay", method = RequestMethod.POST, produces = "application/vnd.api+json")
-	public ResponseEntity<String> payCreditcard(@RequestBody Payment payment) {
+	public ResponseEntity<String> payCreditcard(@Valid @RequestBody(required = true) Payment payment) {
 		return creditcardService.pay(payment);
 	}
 	
