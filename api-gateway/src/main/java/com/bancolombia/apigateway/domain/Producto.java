@@ -14,6 +14,9 @@ public class Producto implements Serializable {
 
 	@ApiModelProperty(name = "data", required = true, value = "The product data")
 	private Object data;
+	
+	@ApiModelProperty(name = "status", required = true, value = "The state of the data")
+	private String status;
 
 	public Producto() {
 	}
@@ -32,6 +35,14 @@ public class Producto implements Serializable {
 
 	public void setData(Object data) {
 		this.data = data;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }
