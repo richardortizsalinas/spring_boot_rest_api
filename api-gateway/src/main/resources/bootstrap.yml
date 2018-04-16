@@ -17,3 +17,10 @@ info:
         name: ApiGateway Microservice
         description: The microservice provide composition capabilities
         
+        
+management:
+  endpoints:
+          web: 
+              exposure:
+                      include: hystrix.stream
+        
