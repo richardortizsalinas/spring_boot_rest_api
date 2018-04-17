@@ -1,6 +1,5 @@
 package com.bancolombia.apigateway.service;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
@@ -17,6 +16,8 @@ import com.netflix.hystrix.contrib.javanica.command.AsyncResult;
 @Service
 public class ProductsService {
 
+	private static final Logger LOG = LoggerFactory.getLogger(ProductsService.class);
+
 	@Value("${service.deposits.endpoint}")
 	String depositsServiceEndpoint;
 
@@ -26,11 +27,11 @@ public class ProductsService {
 	@Autowired
 	TransactionApi transactionApi;
 
-	// String depositsServiceEndpoint =
-	// "http://deposits-service-poc-msa-aee.sbmdegos01v.ambientesbc.lab";
-	//
-	// String creditcardServiceEndpoint =
-	// "http://creditcard-service-poc-msa-aee.sbmdegos01v.ambientesbc.lab";
+//	 String depositsServiceEndpoint =
+//	 "http://deposits-service-poc-msa-aee.sbmdegos01v.ambientesbc.lab";
+//	
+//	 String creditcardServiceEndpoint =
+//	 "http://creditcard-service-poc-msa-aee.sbmdegos01v.ambientesbc.lab";
 
 	@HystrixCommand(fallbackMethod = "getAccountsDefault")
 	public Future<AccountResponseArray> getAccounts(String type, String number) {
@@ -58,7 +59,7 @@ public class ProductsService {
 			@Override
 			public Object invoke() {
 				Object cc = transactionApi.getCreditcardsByOwner(type, number, creditcardServiceEndpoint);
-				return CompletableFuture.completedFuture(cc);
+				return cc;
 			}
 		};
 

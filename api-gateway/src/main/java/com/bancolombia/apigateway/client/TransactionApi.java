@@ -56,7 +56,6 @@ public class TransactionApi {
 
 	}
 
-//	@HystrixCommand(fallbackMethod = "getCreditcardsByOwnerDefault")
 	public Object getCreditcardsByOwner(String tipoDOc, String numDoc, String url) {
 
 		
@@ -74,18 +73,7 @@ public class TransactionApi {
 		} else {
 			return null;
 		}
-		// } catch (Exception e) {
-		//// System.out.println("SYSO E");
-		// throw e;
-		//// LOG.error("ERROR ", e);
-		//// return null;
-		// }
-
-	}
-
-	private Object getCreditcardsByOwnerDefault(String tipoDOc, String numDoc) {
-
-		return "ESTAMOS EN MANTENIMIENTO";
+		
 
 	}
 
