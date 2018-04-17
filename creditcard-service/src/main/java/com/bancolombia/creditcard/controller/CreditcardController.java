@@ -142,7 +142,7 @@ public class CreditcardController {
 	@ApiParam(name = "Payment", value = "creditcard data", required = true)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully created payment") })
 	@RequestMapping(value = "/pay", method = RequestMethod.POST, produces = "application/vnd.api+json")
-	public ResponseEntity<String> payCreditcard(@Valid @RequestBody(required = true) Payment payment) {
+	public ResponseEntity<String> payCreditcard(@RequestBody(required = true) Payment payment) {
 		return creditcardService.pay(payment);
 	}
 	
