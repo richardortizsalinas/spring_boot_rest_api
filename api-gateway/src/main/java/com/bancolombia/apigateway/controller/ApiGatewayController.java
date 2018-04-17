@@ -1,7 +1,10 @@
 package com.bancolombia.apigateway.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -65,9 +68,9 @@ public class ApiGatewayController {
 			String type = data[0];
 			String number = data[1];
 
-			AccountResponseArray cuentas = productsService.getAccounts(type, number);
+			Future<AccountResponseArray> cuentas = productsService.getAccounts(type, number);
 
-			Object tcs = productsService.getCreditcard(type, number);
+			Future<Object> tcs = productsService.getCreditcard(type, number);
 
 			List<Producto> list = new ArrayList<Producto>();
 
@@ -77,7 +80,7 @@ public class ApiGatewayController {
 			if (cuentas != null) {
 
 				pCuentas.setStatus(OK);
-				pCuentas.setData(cuentas.getData());
+				pCuentas.setData(cuentas.get().getData());
 				list.add(pCuentas);
 			} else {
 				pCuentas.setStatus(ERROR);
@@ -91,7 +94,7 @@ public class ApiGatewayController {
 			if (tcs != null) {
 
 				pTarjetas.setStatus(OK);
-				pTarjetas.setData(tcs);
+				pTarjetas.setData(tcs.get());
 				list.add(pTarjetas);
 			} else {
 				pTarjetas.setStatus(ERROR);
@@ -110,6 +113,7 @@ public class ApiGatewayController {
 
 		} catch (Exception e) {
 
+			System.out.println(e);
 			return responseEntity = new ResponseEntity<List<Producto>>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}

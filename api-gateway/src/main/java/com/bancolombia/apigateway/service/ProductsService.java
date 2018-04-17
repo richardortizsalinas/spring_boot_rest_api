@@ -1,36 +1,48 @@
 package com.bancolombia.apigateway.service;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.bancolombia.apigateway.client.TransactionApi;
 import com.bancolombia.apigateway.client.model.AccountResponseArray;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.command.AsyncResult;
 
 @Service
 public class ProductsService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ProductsService.class);
+	@Value("${service.deposits.endpoint}")
+	String depositsServiceEndpoint;
 
-	// @Value("${service.deposits.endpoint}")
-	// String depositsServiceEndpoint;
-	//
-	// @Value("${service.creditcard.endpoint}")
-	// String creditcardServiceEndpoint;
+	@Value("${service.creditcard.endpoint}")
+	String creditcardServiceEndpoint;
+
 	@Autowired
 	TransactionApi transactionApi;
 
-	String depositsServiceEndpoint = "http://deposits-service-poc-msa-aee.sbmdegos01v.ambientesbc.lab";
-
-	String creditcardServiceEndpoint = "http://creditcard-service-poc-msa-aee.sbmdegos01v.ambientesbc.lab";
+	// String depositsServiceEndpoint =
+	// "http://deposits-service-poc-msa-aee.sbmdegos01v.ambientesbc.lab";
+	//
+	// String creditcardServiceEndpoint =
+	// "http://creditcard-service-poc-msa-aee.sbmdegos01v.ambientesbc.lab";
 
 	@HystrixCommand(fallbackMethod = "getAccountsDefault")
-	public AccountResponseArray getAccounts(String type, String number) {
+	public Future<AccountResponseArray> getAccounts(String type, String number) {
 
-		AccountResponseArray cuentas = transactionApi.getAccounts(type, number, depositsServiceEndpoint);
-		return cuentas;
+		return new AsyncResult<AccountResponseArray>() {
+
+			@Override
+			public AccountResponseArray invoke() {
+				AccountResponseArray cuentas = transactionApi.getAccounts(type, number, depositsServiceEndpoint);
+				return cuentas;
+			}
+		};
 
 	}
 
@@ -39,10 +51,16 @@ public class ProductsService {
 	}
 
 	@HystrixCommand(fallbackMethod = "getCreditcardDefault")
-	public Object getCreditcard(String type, String number) {
+	public Future<Object> getCreditcard(String type, String number) {
 
-		Object cc = transactionApi.getCreditcardsByOwner(type, number, creditcardServiceEndpoint);
-		return cc;
+		return new AsyncResult<Object>() {
+
+			@Override
+			public Object invoke() {
+				Object cc = transactionApi.getCreditcardsByOwner(type, number, creditcardServiceEndpoint);
+				return CompletableFuture.completedFuture(cc);
+			}
+		};
 
 	}
 

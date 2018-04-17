@@ -1,6 +1,8 @@
 
 package com.bancolombia.apigateway.client;
 
+import java.util.concurrent.Future;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -42,7 +44,6 @@ public class TransactionApi {
 			if (result.getStatusCode() == HttpStatus.OK) {
 				AccountResponseArray transaction = result.getBody();
 
-				String json = new ObjectMapper().writeValueAsString(transaction);
 				return transaction;
 			} else {
 				return null;
