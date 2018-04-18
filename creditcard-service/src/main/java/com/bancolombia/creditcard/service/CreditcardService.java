@@ -27,6 +27,7 @@ import com.bancolombia.creditcard.kafka.PersistenceTypes;
 import com.bancolombia.creditcard.kafka.Sender;
 import com.bancolombia.creditcard.repository.CreditcardRepository;
 import com.bancolombia.creditcard.repository.PaymentRepository;
+import com.google.gson.GsonBuilder;
 
 @Service
 public class CreditcardService {
@@ -179,7 +180,7 @@ public class CreditcardService {
 	public ResponseEntity<String> pay(Payment payment) {
 		try {
 			
-			Creditcard data = creditcardRepository.findByNumber(payment.getCcnumber());
+			Creditcard data = creditcardRepository.findByNumber(payment.getCreditcard().getNumber());
 			// debito a cuenta
 
 			TransactionApi cliente = new TransactionApi(depositsServiceEndpoint);
@@ -195,6 +196,8 @@ public class CreditcardService {
 			attributes.setOrigin(payment.getAccountId());
 			attributes.setDestination(CUENTA_BANCO);
 			request.setAttributes(attributes);
+			LOG.info(new GsonBuilder().create().toJson(attributes));
+			LOG.info(new GsonBuilder().create().toJson(request));
 			requestBody.setData(request);
 			
 			TransactionResponseSingle response = cliente.create(requestBody);
@@ -204,7 +207,7 @@ public class CreditcardService {
 				// modificacion del cupo disponible
 				BigDecimal cupo = data.getCredit_limit().add(payment.getAmount());
 				data.setCredit_limit(cupo);
-				updateCreditcard(payment.getCcnumber(), data);
+				updateCreditcard(payment.getCreditcard().getNumber(), data);
 
 				// registro del pago
 				Payment newPayment = new Payment();

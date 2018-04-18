@@ -2,8 +2,6 @@ package com.bancolombia.creditcard.controller;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +21,7 @@ import com.bancolombia.creditcard.domain.Creditcard;
 import com.bancolombia.creditcard.domain.Payment;
 import com.bancolombia.creditcard.kafka.Sender;
 import com.bancolombia.creditcard.service.CreditcardService;
+import com.google.gson.Gson;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -130,7 +129,10 @@ public class CreditcardController {
 	@ApiParam(name = "Payment", value = "creditcard data", required = true)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully created payment") })
 	@RequestMapping(value = "/pay", method = RequestMethod.POST, produces = "application/vnd.api+json")
-	public ResponseEntity<String> payCreditcard(@RequestBody(required = true) Payment payment) {
+	public ResponseEntity<String> payCreditcard(@RequestBody(required = true) String data) {
+		
+		Gson gson = new Gson();
+		Payment payment = gson.fromJson(data, Payment.class);
 		return creditcardService.pay(payment);
 	}
 	
