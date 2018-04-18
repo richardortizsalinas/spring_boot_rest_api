@@ -45,8 +45,13 @@ public class Payment implements Serializable {
 	private String accountId;
 
 	@ApiModelProperty(name = "creditcard",required=true,value = "The creditcard number")
-	@NotNull
 	private Creditcard creditcard;
+	
+	
+	@ApiModelProperty(name = "ccnumber",required=true,value = "The creditcard number",example="1112222333")
+	@SerializedName("ccnumber")
+	private String ccnumber;
+	
 
 	@Id
 	@Column(unique=true, nullable=false)
@@ -94,5 +99,12 @@ public class Payment implements Serializable {
 		this.accountId = accountId;
 	}
 
-	
+	public String getCcnumber() {
+		return ccnumber;
+	}
+
+	public void setCcnumber(String ccnumber) {
+		this.ccnumber = ccnumber;
+	}
+
 }

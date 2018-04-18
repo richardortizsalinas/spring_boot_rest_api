@@ -179,7 +179,7 @@ public class CreditcardService {
 	public ResponseEntity<String> pay(Payment payment) {
 		try {
 			
-			Creditcard data = creditcardRepository.findByNumber(payment.getCreditcard().getNumber());
+			Creditcard data = creditcardRepository.findByNumber(payment.getCcnumber());
 			// debito a cuenta
 
 			TransactionApi cliente = new TransactionApi(depositsServiceEndpoint);
@@ -204,7 +204,7 @@ public class CreditcardService {
 				// modificacion del cupo disponible
 				BigDecimal cupo = data.getCredit_limit().add(payment.getAmount());
 				data.setCredit_limit(cupo);
-				updateCreditcard(payment.getCreditcard().getNumber(), data);
+				updateCreditcard(payment.getCcnumber(), data);
 
 				// registro del pago
 				Payment newPayment = new Payment();
