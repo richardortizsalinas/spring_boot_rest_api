@@ -34,7 +34,7 @@ import rx.Single;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/creditcard")
-@Api(value = "creditcard", description = "Operations pertaining to creditcard ")
+@Api(value = "creditcard")
 public class CreditcardController {
 
 	@Bean
@@ -53,23 +53,11 @@ public class CreditcardController {
 	@Autowired
 	private Sender sender;
 
-//	@Autowired
-//	MessageStorage storage;
-//	@Autowired
-//	private Receiver receiver;
-
 	@GetMapping(value = "/producer")
 	public String producer(@RequestParam("data") String data) {
 		sender.send(data);
 		return "Done";
 	}
-
-//	@GetMapping(value = "/consumer")
-//	public String getAllRecievedMessage() {
-//		String messages = storage.toString();
-//		storage.clear();
-//		return messages;
-//	}
 
 	@ApiOperation(value = "View a list of available creditcards", response = Iterable.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved list"),

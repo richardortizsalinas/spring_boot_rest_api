@@ -12,8 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.github.jasminb.jsonapi.annotations.Type;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 
 import io.swagger.annotations.ApiModel;
@@ -103,16 +101,4 @@ public class Creditcard implements Serializable {
 	public void setOwnerIdType(String ownerIdType) {
 		this.ownerIdType = ownerIdType;
 	}
-
-	public static void main(String[] args) {
-
-		Gson g = new GsonBuilder().create();
-		Creditcard data= new Creditcard();
-		
-		data.setOwnerIdType("awdasdas");
-		
-		String jsonString = g.toJson(data);
-		System.out.println(jsonString);
-	}
-
 }

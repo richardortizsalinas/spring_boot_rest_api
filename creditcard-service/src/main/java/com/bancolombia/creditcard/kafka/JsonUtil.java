@@ -7,10 +7,9 @@ public class JsonUtil {
 
 	private static JsonUtil instance = null;
 
-	private static Gson g;
 
 	protected JsonUtil() {
-		g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+		
 	}
 
 	public static JsonUtil getInstance() {
@@ -21,10 +20,9 @@ public class JsonUtil {
 	}
 
 	public String toJson(Object data) {
+		Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+		return  g.toJson(data);
 
-		String jsonString = g.toJson(data);
-
-		return jsonString;
 	}
 
 }

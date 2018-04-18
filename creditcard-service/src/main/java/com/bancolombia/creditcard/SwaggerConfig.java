@@ -2,16 +2,11 @@ package com.bancolombia.creditcard;
 
 import static springfox.documentation.builders.PathSelectors.regex;
 
-import java.awt.print.Book;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import io.swagger.models.Info;
-import io.swagger.models.Swagger;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.schema.Maps;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;

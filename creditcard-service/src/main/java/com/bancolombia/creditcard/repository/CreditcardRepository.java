@@ -10,7 +10,7 @@ import com.bancolombia.creditcard.domain.Creditcard;
 
 @Repository
 public interface CreditcardRepository extends JpaRepository<Creditcard, Long> {
-	// List<Creditcard> findByLastName(String lastName);
+	
 	Creditcard findByNumber(String number);
 
 	@Query("select p from Creditcard p where upper(p.ownerIdType) = upper(?1) and upper(p.ownerId) = upper(?2)")

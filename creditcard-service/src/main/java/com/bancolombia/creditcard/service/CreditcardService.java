@@ -48,8 +48,7 @@ public class CreditcardService {
 	private Sender sender;
 
 	public List<Creditcard> getAll() {
-		List<Creditcard> productList = creditcardRepository.findAll();
-		return productList;
+		return creditcardRepository.findAll();
 	}
 
 	public ResponseEntity<Creditcard> get(String number) {
@@ -59,18 +58,18 @@ public class CreditcardService {
 		ResponseEntity<Creditcard> responseEntity;
 
 		if (data == null) {
-			responseEntity = new ResponseEntity<Creditcard>(data, HttpStatus.NOT_FOUND);
+			responseEntity = new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
 
 		} else {
-			responseEntity = new ResponseEntity<Creditcard>(data, HttpStatus.OK);
+			responseEntity = new ResponseEntity<>(data, HttpStatus.OK);
 		}
 
 		return responseEntity;
 	}
 
-	public ResponseEntity<List<Creditcard>> getByUserId(String owner_id) {
+	public ResponseEntity<List<Creditcard>> getByUserId(String ownerId) {
 
-		String[] data = owner_id.split("_");
+		String[] data = ownerId.split("_");
 
 		String type = data[0];
 		String number = data[1];
@@ -130,7 +129,6 @@ public class CreditcardService {
 			return new ResponseEntity<String>("Creditcard saved successfully", HttpStatus.OK);
 
 		} catch (Exception e) {
-			System.out.println(e);
 			return null;
 		}
 	}
@@ -155,10 +153,9 @@ public class CreditcardService {
 
 		sender.send(message);
 
-		ResponseEntity<String> responseEntity = new ResponseEntity<String>("Creditcard updated successfully",
+		return new ResponseEntity<String>("Creditcard updated successfully",
 				HttpStatus.OK);
 
-		return responseEntity;
 	}
 
 	public ResponseEntity<String> delete(@PathVariable String number) {

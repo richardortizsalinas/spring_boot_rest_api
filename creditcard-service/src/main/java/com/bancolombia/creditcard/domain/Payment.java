@@ -48,9 +48,6 @@ public class Payment implements Serializable {
 	@NotNull
 	private Creditcard creditcard;
 
-	public Payment() {
-	}
-
 	@Id
 	@Column(unique=true, nullable=false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
