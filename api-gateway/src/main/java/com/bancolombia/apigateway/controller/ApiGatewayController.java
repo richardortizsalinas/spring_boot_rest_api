@@ -1,9 +1,7 @@
 package com.bancolombia.apigateway.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +70,7 @@ public class ApiGatewayController {
 
 			Future<Object> tcs = productsService.getCreditcard(type, number);
 
-			List<Producto> list = new ArrayList<Producto>();
+			List<Producto> list = new ArrayList<>();
 
 			Producto pCuentas = new Producto();
 			pCuentas.setType("Account");
@@ -103,18 +101,17 @@ public class ApiGatewayController {
 			}
 
 			if (list == null || list.isEmpty()) {
-				responseEntity = new ResponseEntity<List<Producto>>(list, HttpStatus.NOT_FOUND);
+				responseEntity = new ResponseEntity<>(list, HttpStatus.NOT_FOUND);
 
 			} else {
-				responseEntity = new ResponseEntity<List<Producto>>(list, HttpStatus.OK);
+				responseEntity = new ResponseEntity<>(list, HttpStatus.OK);
 			}
 
 			return responseEntity;
 
 		} catch (Exception e) {
 
-			System.out.println(e);
-			return responseEntity = new ResponseEntity<List<Producto>>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
 	}

@@ -27,12 +27,6 @@ public class ProductsService {
 	@Autowired
 	TransactionApi transactionApi;
 
-//	 String depositsServiceEndpoint =
-//	 "http://deposits-service-poc-msa-aee.sbmdegos01v.ambientesbc.lab";
-//	
-//	 String creditcardServiceEndpoint =
-//	 "http://creditcard-service-poc-msa-aee.sbmdegos01v.ambientesbc.lab";
-
 	@HystrixCommand(fallbackMethod = "getAccountsDefault")
 	public Future<AccountResponseArray> getAccounts(String type, String number) {
 
@@ -40,8 +34,7 @@ public class ProductsService {
 
 			@Override
 			public AccountResponseArray invoke() {
-				AccountResponseArray cuentas = transactionApi.getAccounts(type, number, depositsServiceEndpoint);
-				return cuentas;
+				return transactionApi.getAccounts(type, number, depositsServiceEndpoint);
 			}
 		};
 

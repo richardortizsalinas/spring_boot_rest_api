@@ -18,8 +18,7 @@ public class Producto implements Serializable {
 	@ApiModelProperty(name = "status", required = true, value = "The state of the data")
 	private String status;
 
-	public Producto() {
-	}
+
 
 	public String getType() {
 		return type;
